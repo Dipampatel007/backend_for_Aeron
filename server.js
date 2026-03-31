@@ -6,13 +6,13 @@ require('dotenv').config();
 const app = express();
 
 // Middlewares
-app.use(cors()); // ✅ Sahi tarika
+app.use(cors());
 app.use(express.json()); 
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("🔥 MongoDB Connected Successfully to aeron_erp!");
+    console.log("🔥 MongoDB Connected Successfully!");
   })
   .catch((err) => {
     console.error("❌ MongoDB Connection Error:", err);
@@ -20,23 +20,21 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Basic Test Route
 app.get('/', (req, res) => {
-    res.send("Aeron ERP Backend is Running on Render! 🚀");
+    res.send("Aeron ERP Backend is Running! 🚀");
 });
 
 // ==========================================
-// API ROUTES CONNECT KARNA (Sab kuch /api ke andar)
+// API ROUTES (FILES SEEDHA BAHAR HAIN)
 // ==========================================
 
-// 1. Purani API (Bhatti aur Inventory)
-const apiRoutes = require('./routes/api');
+// 1. Bhatti aur Inventory (api.js file)
+const apiRoutes = require('./api'); // ✅ './routes/api' ki jagah sirf './api'
 app.use('/api', apiRoutes);
 
-// 2. Auth API (Ab ye bhi /api ke andar chalegi)
-const authRoutes = require('./routes/auth');
+// 2. Auth (auth.js file)
+const authRoutes = require('./auth'); // ✅ './routes/auth' ki jagah sirf './auth'
 app.use('/api', authRoutes); 
 
-// Isse ab routes aise ban jayenge:
-// /api/login, /api/register, /api/inventory, etc.
 // ==========================================
 
 const PORT = process.env.PORT || 5000;
