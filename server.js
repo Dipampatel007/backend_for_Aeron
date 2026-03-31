@@ -20,7 +20,7 @@ mongoose.connect(mongoURI)
 // 2. Sample Route (Check karne ke liye ki server live hai ya nahi)
 app.get('/', (req, res) => {
   res.send("Aeron ERP Backend is Live on Cloud! 🚀");
-});
+})
 
 // 3. Tere Purane Routes (Yahan apne asli routes add kar lena)
 // Example: app.use('/api/users', require('./routes/userRoutes'));
