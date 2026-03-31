@@ -1,37 +1,45 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors'); // ✅ CORS Import kiya
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 
-// Middleware
-app.use(cors()); // ✅ Ye line ab sabhi requests ko allow karegi (Mobile + Web)
-app.use(express.json());
+// Middlewares
+app.use(cors()); // ✅ Sahi tarika
+app.use(express.json()); 
 
-// 1. Connection String: Render ki "Key" (MONGO_URI) se connect hoga
-const mongoURI = process.env.MONGO_URI; 
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("🔥 MongoDB Connected Successfully to aeron_erp!");
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+  });
 
-if (!mongoURI) {
-  console.error("❌ ERROR: MONGO_URI is not defined in Render Environment Variables!");
-}
-
-mongoose.connect(mongoURI)
-  .then(() => console.log("✅ MongoDB Atlas (Cloud) Connected Successfully!"))
-  .catch((err) => console.log("❌ MongoDB Connection Error:", err));
-
-// 2. Default Route (Check karne ke liye ki server live hai)
+// Basic Test Route
 app.get('/', (req, res) => {
-  res.send("Aeron ERP Backend is Live on Render! 🚀");
+    res.send("Aeron ERP Backend is Running on Render! 🚀");
 });
 
-// 3. Routes (Apne purane routes yahan niche add kar lena)
-// Example: app.use('/api/inventory', require('./routes/inventory'));
-// Example: app.use('/api/auth', require('./routes/auth'));
+// ==========================================
+// API ROUTES CONNECT KARNA (Sab kuch /api ke andar)
+// ==========================================
 
-// 4. Port Setting: Render apne aap PORT assign karta hai (default 10000)
+// 1. Purani API (Bhatti aur Inventory)
+const apiRoutes = require('./routes/api');
+app.use('/api', apiRoutes);
+
+// 2. Auth API (Ab ye bhi /api ke andar chalegi)
+const authRoutes = require('./routes/auth');
+app.use('/api', authRoutes); 
+
+// Isse ab routes aise ban jayenge:
+// /api/login, /api/register, /api/inventory, etc.
+// ==========================================
+
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });
